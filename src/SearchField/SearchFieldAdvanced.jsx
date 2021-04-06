@@ -4,10 +4,11 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
+import Icon from '../Icon';
+import { Search, Close } from '../../icons';
 
 import newId from '../utils/newId';
+import Button from '../Button';
 
 export const SearchFieldContext = createContext();
 
@@ -24,6 +25,7 @@ const SearchFieldAdvanced = (props) => {
     onFocus,
     value: initialValue,
     formAriaLabel,
+    submitButtonLocation,
   } = props;
 
   const [hasFocus, setHasFocus] = useState(false);
@@ -77,38 +79,41 @@ const SearchFieldAdvanced = (props) => {
   };
 
   return (
-    <div
-      className={classNames(
-        'pgn__searchfield', 'd-flex',
-        { 'has-focus': hasFocus },
-        className,
-      )}
-    >
-      <form
-        role="search"
-        onSubmit={handleSubmit}
-        onReset={handleClear}
-        className="d-flex align-items-center w-100"
-        aria-label={formAriaLabel}
+    <div className="d-flex">
+      <div
+        className={classNames(
+          'pgn__searchfield', 'd-flex', 'w-100',
+          { 'has-focus': hasFocus },
+          className,
+        )}
       >
-        <SearchFieldContext.Provider
-          value={{
-            inputId,
-            screenReaderText,
-            icons,
-            value,
-            handleFocus,
-            handleBlur,
-            handleChange,
-            refs: {
-              input: inputRef,
-              submitButton: submitButtonRef,
-            },
-          }}
+        <form
+          role="search"
+          onSubmit={handleSubmit}
+          onReset={handleClear}
+          className="d-flex align-items-center w-100"
+          aria-label={formAriaLabel}
         >
-          {children}
-        </SearchFieldContext.Provider>
-      </form>
+          <SearchFieldContext.Provider
+            value={{
+              inputId,
+              screenReaderText,
+              icons,
+              value,
+              handleFocus,
+              handleBlur,
+              handleChange,
+              refs: {
+                input: inputRef,
+                submitButton: submitButtonRef,
+              },
+            }}
+          >
+            {children}
+          </SearchFieldContext.Provider>
+        </form>
+      </div>
+      {submitButtonLocation === 'external' && <Button className="ml-2" onClick={handleSubmit} ref={submitButtonRef}>Search</Button>}
     </div>
   );
 };
@@ -151,18 +156,21 @@ SearchFieldAdvanced.propTypes = {
   }),
   /** specifies the initial value for the input. The default is an empty string. */
   value: PropTypes.string,
-  /** specifies the icon element(s) to use for the clear and submit buttons. The default is `{ submit: <FontAwesomeIcon icon={faSearch} />, clear: <FontAwesomeIcon icon={faTimes} /> }`. */
+  /** specifies the icon element(s) to use for the clear and submit buttons. The default is `{ submit: <Icon src={Search} />, clear: <Icon src={Close} /> }`. */
   icons: PropTypes.shape({
     submit: PropTypes.element.isRequired,
     clear: PropTypes.element,
   }),
   /** specifies the aria-label attribute on the form element. This is useful if you use the `SearchField` component more than once on a page. */
   formAriaLabel: PropTypes.string,
+  /** specifies whether the search button is internal as an icon or external as a button. */
+  submitButtonLocation: PropTypes.string,
 };
 
 SearchFieldAdvanced.defaultProps = {
   className: undefined,
   formAriaLabel: undefined,
+  submitButtonLocation: 'internal',
   value: '',
   screenReaderText: {
     label: 'search',
@@ -170,8 +178,8 @@ SearchFieldAdvanced.defaultProps = {
     clearButton: 'clear search',
   },
   icons: {
-    clear: <FontAwesomeIcon icon={faTimes} />,
-    submit: <FontAwesomeIcon icon={faSearch} />,
+    clear: <Icon src={Close} />,
+    submit: <Icon src={Search} />,
   },
   onBlur: () => {},
   onChange: () => {},

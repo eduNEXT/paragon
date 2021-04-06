@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
+import Icon from '../Icon';
+import { Search, Close } from '../../icons';
 
 import SearchFieldAdvanced, { SearchFieldContext } from './SearchFieldAdvanced';
 import SearchFieldLabel from './SearchFieldLabel';
@@ -14,15 +14,16 @@ const SearchField = (props) => {
   const {
     label,
     placeholder,
+    submitButtonLocation,
     ...others
   } = props;
 
   return (
-    <SearchField.Advanced {...others}>
+    <SearchField.Advanced submitButtonLocation={submitButtonLocation} {...others}>
       <SearchField.Label>{label}</SearchField.Label>
       <SearchField.Input placeholder={placeholder} />
       <SearchField.ClearButton />
-      <SearchField.SubmitButton />
+      {submitButtonLocation === 'internal' && <SearchField.SubmitButton />}
     </SearchField.Advanced>
   );
 };
@@ -74,6 +75,8 @@ SearchField.propTypes = {
   }),
   /** specifies the aria-label attribute on the form element. This is useful if you use the `SearchField` component more than once on a page. */
   formAriaLabel: PropTypes.string,
+  /** specifies whether the search button is internal as an icon or external as a button. */
+  submitButtonLocation: PropTypes.string,
 };
 
 SearchField.defaultProps = {
@@ -81,6 +84,7 @@ SearchField.defaultProps = {
   placeholder: undefined,
   className: undefined,
   formAriaLabel: undefined,
+  submitButtonLocation: 'internal',
   value: '',
   screenReaderText: {
     label: 'search',
@@ -88,8 +92,8 @@ SearchField.defaultProps = {
     clearButton: 'clear search',
   },
   icons: {
-    clear: <FontAwesomeIcon icon={faTimes} />,
-    submit: <FontAwesomeIcon icon={faSearch} />,
+    clear: <Icon src={Close} />,
+    submit: <Icon src={Search} />,
   },
   onBlur: () => {},
   onChange: () => {},
