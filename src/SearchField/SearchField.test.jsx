@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
+import Icon from '../Icon';
+import { Search, Close } from '../../icons';
 
 import SearchField from './index';
 import SearchFieldLabel from './SearchFieldLabel';
@@ -31,8 +31,8 @@ describe('<SearchField /> with basic usage', () => {
       ],
       className: undefined,
       icons: {
-        clear: <FontAwesomeIcon icon={faTimes} />,
-        submit: <FontAwesomeIcon icon={faSearch} />,
+        clear: <Icon src={Close} />,
+        submit: <Icon src={Search} />,
       },
       onFocus: expect.any(Function),
       onBlur: expect.any(Function),
@@ -45,6 +45,7 @@ describe('<SearchField /> with basic usage', () => {
         clearButton: 'clear search',
         submitButton: 'submit search',
       },
+      submitButtonLocation: 'internal',
     });
   });
 
