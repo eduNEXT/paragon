@@ -77,6 +77,15 @@ notes:
 />
 ```
 
+### with search button external
+
+```jsx live
+<SearchField
+  submitButtonLocation='external'
+  onSubmit={value => console.log(`search submitted: ${value}`)}
+/>
+```
+
 ### Advanced Usage
 
 For needs that deviate from the basic usage above, use `<SearchField.Advanced />`. The `children` elements must contain the `SearchField.Label` and `SearchField.Input` components at a minimum.
@@ -141,5 +150,17 @@ For needs that deviate from the basic usage above, use `<SearchField.Advanced />
 >
   <SearchField.Label />
   <SearchField.Input />
+</SearchField.Advanced>
+```
+
+### with search button external
+```jsx live
+<SearchField.Advanced
+  submitButtonLocation='external'
+  onSubmit={value => console.log(`search submitted: ${value}`)}
+>
+  <SearchField.Label />
+  <SearchField.Input />
+  <SearchField.ClearButton />
 </SearchField.Advanced>
 ```
