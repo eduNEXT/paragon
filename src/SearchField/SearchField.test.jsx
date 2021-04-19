@@ -45,7 +45,6 @@ describe('<SearchField /> with basic usage', () => {
         clearButton: 'clear search',
         submitButton: 'submit search',
       },
-      submitButtonLocation: 'internal',
     });
   });
 

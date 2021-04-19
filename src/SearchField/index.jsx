@@ -19,11 +19,11 @@ const SearchField = (props) => {
   } = props;
 
   return (
-    <SearchField.Advanced submitButtonLocation={submitButtonLocation} {...others}>
+    <SearchField.Advanced {...others}>
       <SearchField.Label>{label}</SearchField.Label>
       <SearchField.Input placeholder={placeholder} />
       <SearchField.ClearButton />
-      {submitButtonLocation === 'internal' && <SearchField.SubmitButton />}
+      <SearchField.SubmitButton submitButtonLocation={submitButtonLocation} />
     </SearchField.Advanced>
   );
 };

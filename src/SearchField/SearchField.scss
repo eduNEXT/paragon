@@ -2,6 +2,9 @@
     @extend .border;
     @extend .rounded;
     transition: $input-transition;
+    display: flex;
+    align-items: center;
+    width: 100%;
 
     &.has-focus {
         box-shadow: $input-focus-box-shadow;
@@ -33,10 +36,22 @@
 
     label.has-label-text {
         padding-left: 0.75rem;
+        padding-bottom: .125rem;
     }
 
     .btn[type="submit"],
     .btn[type="reset"] {
         @extend .px-2;
+    }
+}
+
+.pgn__search {
+    display: flex;
+    align-items: center; 
+    width: 100%;
+
+    .btn-external {
+        margin-left: .5rem;
+        white-space: nowrap;
     }
 }

@@ -8,7 +8,6 @@ import Icon from '../Icon';
 import { Search, Close } from '../../icons';
 
 import newId from '../utils/newId';
-import Button from '../Button';
 
 export const SearchFieldContext = createContext();
 
@@ -25,7 +24,6 @@ const SearchFieldAdvanced = (props) => {
     onFocus,
     value: initialValue,
     formAriaLabel,
-    submitButtonLocation,
   } = props;
 
   const [hasFocus, setHasFocus] = useState(false);
@@ -78,43 +76,60 @@ const SearchFieldAdvanced = (props) => {
     setValue(event.target.value);
   };
 
+  const renderChildrensSplitSubmitButton = (currentChildren) => {
+    const submitButtonInternal = React.Children.toArray(currentChildren).find(child => child.type.name === 'SearchFieldSubmitButton' && child.props.submitButtonLocation === 'internal');
+
+    const submitButtonExternal = React.Children.toArray(currentChildren).find(child => child.type.name === 'SearchFieldSubmitButton' && child.props.submitButtonLocation === 'external');
+
+    const childrensFilter = React.Children.toArray(currentChildren).filter((child) => child.type.name !== 'SearchFieldSubmitButton');
+
+    const childrens = childrensFilter.map((child) => React.cloneElement(child, { ...child.props }));
+
+    return { childrens, submitButtonInternal, submitButtonExternal };
+  };
+
+  const {
+    childrens,
+    submitButtonInternal,
+    submitButtonExternal,
+  } = renderChildrensSplitSubmitButton(children);
+
   return (
-    <div className="d-flex">
-      <div
-        className={classNames(
-          'pgn__searchfield', 'd-flex', 'w-100',
-          { 'has-focus': hasFocus },
-          className,
-        )}
+    <form
+      role="search"
+      onSubmit={handleSubmit}
+      onReset={handleClear}
+      className="pgn__search"
+      aria-label={formAriaLabel}
+    >
+      <SearchFieldContext.Provider
+        value={{
+          inputId,
+          screenReaderText,
+          icons,
+          value,
+          handleFocus,
+          handleBlur,
+          handleChange,
+          refs: {
+            input: inputRef,
+            submitButton: submitButtonRef,
+          },
+        }}
       >
-        <form
-          role="search"
-          onSubmit={handleSubmit}
-          onReset={handleClear}
-          className="d-flex align-items-center w-100"
-          aria-label={formAriaLabel}
+        <div
+          className={classNames(
+            'pgn__searchfield',
+            { 'has-focus': hasFocus },
+            className,
+          )}
         >
-          <SearchFieldContext.Provider
-            value={{
-              inputId,
-              screenReaderText,
-              icons,
-              value,
-              handleFocus,
-              handleBlur,
-              handleChange,
-              refs: {
-                input: inputRef,
-                submitButton: submitButtonRef,
-              },
-            }}
-          >
-            {children}
-          </SearchFieldContext.Provider>
-        </form>
-      </div>
-      {submitButtonLocation === 'external' && <Button className="ml-2" onClick={handleSubmit} ref={submitButtonRef}>Search</Button>}
-    </div>
+          {childrens}
+          {submitButtonInternal}
+        </div>
+        {submitButtonExternal}
+      </SearchFieldContext.Provider>
+    </form>
   );
 };
 
@@ -163,14 +178,11 @@ SearchFieldAdvanced.propTypes = {
   }),
   /** specifies the aria-label attribute on the form element. This is useful if you use the `SearchField` component more than once on a page. */
   formAriaLabel: PropTypes.string,
-  /** specifies whether the search button is internal as an icon or external as a button. */
-  submitButtonLocation: PropTypes.string,
 };
 
 SearchFieldAdvanced.defaultProps = {
   className: undefined,
   formAriaLabel: undefined,
-  submitButtonLocation: 'internal',
   value: '',
   screenReaderText: {
     label: 'search',
