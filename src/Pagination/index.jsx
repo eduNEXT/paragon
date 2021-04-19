@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Button } from '..';
+import { Button, Dropdown, DropdownButton } from '..';
 import { ExtraSmall, LargerThanExtraSmall } from '../Responsive';
 import getTextFromElement from '../utils/getTextFromElement';
 import Icon from '../Icon';
@@ -128,14 +128,15 @@ class Pagination extends React.Component {
         ])}
         key={page}
       >
-        <Button.Deprecated
-          className="page-link"
+        <Button
+          size={this.props.size}
+          variant={active ? 'primary' : 'tertiary'}
           aria-label={ariaLabel}
-          inputRef={(element) => { this.pageRefs[page] = element; }}
+          ref={(button) => { this.pageRefs[page] = button; }}
           onClick={() => { this.handlePageSelect(page); }}
         >
           {page.toString()}
-        </Button.Deprecated>
+        </Button>
       </li>
     );
   }
@@ -212,19 +213,20 @@ class Pagination extends React.Component {
           },
         )}
       >
-        <Button.Deprecated
-          className="previous page-link"
+        <Button
+          size={this.props.size}
+          variant="tertiary"
           aria-label={ariaLabel}
           tabIndex={isFirstPage ? '-1' : undefined}
           onClick={() => { this.handlePreviousNextButtonClick(previousPage); }}
-          inputRef={(element) => { this.previousButtonRef = element; }}
+          ref={(button) => { this.previousButtonRef = button; }}
           disabled={isFirstPage}
         >
           <div>
             {icons.leftIcon}
-            {buttonLabels.previous}
+            {this.props.variant !== 'minimal' && this.props.variant !== 'reduced' && buttonLabels.previous}
           </div>
-        </Button.Deprecated>
+        </Button>
       </li>
     );
   }
@@ -258,19 +260,20 @@ class Pagination extends React.Component {
           },
         )}
       >
-        <Button.Deprecated
-          className="next page-link"
+        <Button
+          size={this.props.size}
+          variant="tertiary"
           aria-label={ariaLabel}
           tabIndex={isLastPage ? '-1' : undefined}
           onClick={() => { this.handlePreviousNextButtonClick(nextPage); }}
-          inputRef={(element) => { this.nextButtonRef = element; }}
+          ref={(button) => { this.nextButtonRef = button; }}
           disabled={isLastPage}
         >
           <div>
-            {buttonLabels.next}
+            {this.props.variant !== 'minimal' && this.props.variant !== 'reduced' && buttonLabels.next}
             {icons.rightIcon}
           </div>
-        </Button.Deprecated>
+        </Button>
       </li>
     );
   }
@@ -307,6 +310,13 @@ class Pagination extends React.Component {
    * the total number of pages.
    */
   renderPageButtons(range) {
+    if (this.props.variant === 'minimal') {
+      return null;
+    }
+    if (this.props.variant === 'reduced') {
+      return this.renderPageButtonsReduced(range);
+    }
+
     const { currentPage } = this.state;
     const { pageCount, maxPagesDisplayed } = this.props;
 
@@ -349,6 +359,40 @@ class Pagination extends React.Component {
     return this.renderPageButtons(pageRange);
   }
 
+  renderPageButtonsReduced(range) {
+    const { currentPage } = this.state;
+    const { pageCount } = this.props;
+
+    const pageRange = range || [...Array(pageCount).keys()].map(page => page + 1);
+    const lastIndex = pageRange.length - 1;
+
+    const dropdownItems = pageRange.map(page => (
+      <Dropdown.Item
+        key={page.toString()}
+        eventKey={page.toString()}
+        active={page === currentPage}
+        onClick={() => { this.handlePageSelect(page); }}
+      >
+        {page}
+      </Dropdown.Item>
+    ));
+
+    return (
+      <li
+        className="page-item"
+      >
+        <DropdownButton
+          size={this.props.size}
+          variant="tertiary"
+          id="pagination-reduced-button"
+          title={`${currentPage} of ${pageRange[lastIndex]}`}
+        >
+          {dropdownItems}
+        </DropdownButton>
+      </li>
+    );
+  }
+
   render() {
     return (
       <nav
@@ -386,6 +430,8 @@ Pagination.defaultProps = {
   className: undefined,
   currentPage: 1,
   maxPagesDisplayed: 7,
+  variant: undefined,
+  size: undefined,
 };
 
 Pagination.propTypes = {
@@ -437,6 +483,10 @@ The default is:
     leftIcon: PropTypes.node,
     rightIcon: PropTypes.node,
   }),
+  /** specifies variants for the `Pagination` component. */
+  variant: PropTypes.oneOf(['reduced', 'minimal']),
+  /** specifies sizes for the `Pagination` component. */
+  size: PropTypes.oneOf(['sm', 'lg']),
 };
 
 export default Pagination;

@@ -13,3 +13,8 @@
 .page-item > .btn {
     transition: none;
 }
+
+// Buttons
+.btn-tertiary.disabled, .btn-tertiary:disabled {
+    color: inherit;
+}
