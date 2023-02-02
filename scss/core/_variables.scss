@@ -416,7 +416,7 @@ $inline-link-hover-decoration-color:      rgba($inline-link-hover-color, 1) !def
 
 $muted-link-color:                              var(--custom-muted-link-color, $default-primary) !default;
 $muted-link-decoration:                         none !default;
-$muted-link-hover-color:                        var(--custom-muted-link-color, darken($default-primary, 15%)) !default;
+$muted-link-hover-color:                        var(--custom-muted-link-hover-color, darken($default-primary, 15%)) !default;
 $muted-link-hover-decoration:                   underline !default;
 $muted-inline-link-color:                       $default-primary !default;
 $muted-inline-link-decoration:                  underline !default;
