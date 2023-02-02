@@ -38,11 +38,11 @@
 // This function only works with a hex string number of two digits,
 // like "A8", "B5" etc.
 //
-@function hexToDec($hex) {
+@function hex-to-dec($hex) {
   $hex-map-values: (
     "0": 0,
     "1": 1,
-    "2": 2, 
+    "2": 2,
     "3": 3,
     "4": 4,
     "5": 5,
@@ -73,9 +73,9 @@
   $end: str-index($color, ')') - 1;
   $default-color: to-upper-case(str-slice($color, $start, $end));
 
-  $r: hexToDec(str-slice($default-color, 1, 2));
-  $g: hexToDec(str-slice($default-color, 3, 4));
-  $b: hexToDec(str-slice($default-color, 5, 6));
+  $r: hex-to-dec(str-slice($default-color, 1, 2));
+  $g: hex-to-dec(str-slice($default-color, 3, 4));
+  $b: hex-to-dec(str-slice($default-color, 5, 6));
 
   @return rgb($r, $g, $b);
 }
